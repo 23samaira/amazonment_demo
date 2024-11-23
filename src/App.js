@@ -1,11 +1,11 @@
 "react";
 import "./App.css";
-import LandingPage from "./LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage.js";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import OrdersPage from "./OrdersPage";
-import Products from "./Products";
-import ProductDetails from "./ProductDetails";
-
+import OrdersPage from "./pages/Orders/OrdersPage.js";
+import Products from "./pages/Products/Products.js";
+import ProductDetails from "./pages/Products/ProductDetails.js";
+import React, { useState } from "react";
 
 function App() {
   // States for mobile number and OTP

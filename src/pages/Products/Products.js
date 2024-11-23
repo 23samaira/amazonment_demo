@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ProductDetails from "./ProductDetails";
+import ProductDetails from "/Users/priyalgupta/Desktop/amazonment/my-app/amazonment_demo/src/pages/Products/ProductDetails.js";
 
 function Products() {
   const data = [

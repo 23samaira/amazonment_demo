@@ -1,6 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 function OrdersPage() {
+  const [isShipmentModalOpen, setIsShipmentModalOpen] = useState(false); // Modal for shipment form
+  const [toastMessage, setToastMessage] = useState(""); // Toast message content
+  const [shipmentData, setShipmentData] = useState({
+    address: "",
+    courier: "",
+  }); // Shipment data
+  // States to manage modal visibility and order data
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [orderData, setOrderData] = useState({
+    orderId: "",
+    customerName: "",
+    platform: "Shopify",
+    priority: "High",
+    products: [],
+  });
+
+  // State for adding a new product to the order
+  const [newProduct, setNewProduct] = useState("");
+
+  // State to store the orders
+  const [orders, setOrders] = useState([]);
+
+  // Toggle Modal
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOrderData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Add product to the list
+  const handleAddProduct = () => {
+    if (newProduct) {
+      setOrderData((prevData) => ({
+        ...prevData,
+        products: [
+          ...prevData.products,
+          { description: newProduct, id: Date.now() },
+        ],
+      }));
+      setNewProduct("");
+    }
+  };
+
+  // Remove product from the list
+  const handleRemoveProduct = (productId) => {
+    setOrderData((prevData) => ({
+      ...prevData,
+      products: prevData.products.filter((product) => product.id !== productId),
+    }));
+  };
+
+  // Submit the order and add to orders list
+  const handleSubmitOrder = () => {
+    setOrders((prevOrders) => [...prevOrders, orderData]);
+    setOrderData({
+      orderId: "",
+      customerName: "",
+      platform: "Shopify",
+      priority: "High",
+      products: [],
+    });
+    toggleModal();
+  };
+  // Handle shipment modal visibility
+  const toggleShipmentModal = () => {
+    setIsShipmentModalOpen(!isShipmentModalOpen);
+  };
+
+  // Handle shipment form input
+  const handleShipmentInputChange = (e) => {
+    const { name, value } = e.target;
+    setShipmentData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Submit shipment data
+  const handleSubmitShipment = () => {
+    // Close the modal and show a toast message
+    toggleShipmentModal();
+    setToastMessage("Sent for shipment"); // Set toast message
+    setTimeout(() => setToastMessage(""), 3000); // Clear the message after 3 seconds
+  };
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
@@ -40,7 +129,9 @@ function OrdersPage() {
           </div>
           <div className="flex space-x-2">
             <button className="btn btn-outline">Sync</button>
-            <button className="btn btn-outline">Create</button>
+            <button onClick={toggleModal} className="btn btn-outline">
+              Create
+            </button>
           </div>
         </div>
       </header>
@@ -79,28 +170,163 @@ function OrdersPage() {
         {/* Action Buttons */}
         <div className="flex justify-end space-x-2">
           <button className="btn btn-text">Cancel</button>
-          <button className="btn btn-primary">Confirm Shipment</button>
+          <button onClick={toggleShipmentModal} className="btn btn-primary">
+            Confirm Shipment
+          </button>
         </div>
 
         {/* Order Cards */}
         <div className="space-y-4">
-          {[1, 2, 3].map((orderId) => (
+          {orders.map((order, index) => (
             <div
-              key={orderId}
+              key={index}
               className="card bg-white shadow p-4 flex justify-between items-start"
             >
               <input type="checkbox" />
               <div>
-                <h3 className="font-semibold">Order ID: #{orderId}</h3>
+                <h3 className="font-semibold">Order ID: #{order.orderId}</h3>
                 <p className="text-gray-600">
-                  John Doe | Shopify |{" "}
+                  {order.customerName} | {order.platform} |{" "}
                   <span className="text-red-500">High Priority</span>
                 </p>
+                <ul>
+                  {order.products.map((product) => (
+                    <li key={product.id}>{product.description}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           ))}
         </div>
       </div>
+      {/* Modal for Creating an Order */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Create Order</h2>
+            <input
+              type="text"
+              name="orderId"
+              value={orderData.orderId}
+              onChange={handleInputChange}
+              placeholder="Order ID"
+              className="input input-bordered w-full mb-2"
+            />
+            <input
+              type="text"
+              name="customerName"
+              value={orderData.customerName}
+              onChange={handleInputChange}
+              placeholder="Customer Name"
+              className="input input-bordered w-full mb-2"
+            />
+            <select
+              name="platform"
+              value={orderData.platform}
+              onChange={handleInputChange}
+              className="select select-bordered w-full mb-2"
+            >
+              <option value="Shopify">Shopify</option>
+              <option value="Magento">Magento</option>
+            </select>
+            <select
+              name="priority"
+              value={orderData.priority}
+              onChange={handleInputChange}
+              className="select select-bordered w-full mb-2"
+            >
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+
+            {/* Product Addition Section */}
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={newProduct}
+                onChange={(e) => setNewProduct(e.target.value)}
+                placeholder="Enter Product SKU/Description"
+                className="input input-bordered w-full mb-2"
+              />
+              <button onClick={handleAddProduct} className="btn btn-outline">
+                Add Product
+              </button>
+            </div>
+
+            {/* Product List */}
+            <div className="mt-4">
+              <h4 className="font-semibold mb-2">Added Products</h4>
+              {orderData.products.map((product, i) => (
+                <div key={product.id} className="flex items-center space-x-2">
+                  <p>{product.description}</p>
+                  <button
+                    onClick={() => handleRemoveProduct(product.id)}
+                    className="btn btn-outline btn-danger"
+                  >
+                    Remove
+                  </button>
+                  <button className="btn btn-outline">Preview</button>
+                </div>
+              ))}
+            </div>
+
+            {/* Submit Button */}
+            <div className="mt-4 flex justify-end space-x-2">
+              <button onClick={toggleModal} className="btn btn-text">
+                Cancel
+              </button>
+              <button onClick={handleSubmitOrder} className="btn btn-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Shipment Modal */}
+      {isShipmentModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Shipment Details</h2>
+            <input
+              type="text"
+              name="address"
+              value={shipmentData.address}
+              onChange={handleShipmentInputChange}
+              placeholder="Enter Address"
+              className="input input-bordered w-full mb-2"
+            />
+            <select
+              name="courier"
+              value={shipmentData.courier}
+              onChange={handleShipmentInputChange}
+              className="select select-bordered w-full mb-2"
+            >
+              <option value="">Select Shipping Speed</option>
+              <option value="Standard">StandardL</option>
+              <option value="Expedited">Expedited</option>
+            </select>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button onClick={toggleShipmentModal} className="btn btn-text">
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitShipment}
+                className="btn btn-primary"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded shadow">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 }

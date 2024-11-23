@@ -1,6 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 function LandingPage() {
+  // State to control the visibility of the popup/modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // State to store the store name and URL entered by the user
+  const [selectedStore, setSelectedStore] = useState("");
+  const [storeUrl, setStoreUrl] = useState("");
+
+  // Function to open the modal and set the selected store name
+  const handleConnectClick = (store) => {
+    setSelectedStore(store); // Set the store name (e.g., Shopify, Amazon)
+    setIsModalOpen(true); // Open the modal
+  };
+
+  // Function to handle the form submission inside the modal
+  const handleFormSubmit = (event) => {
+    event.preventDefault(); // Prevent page refresh on form submit
+    if (storeUrl.trim() === "") {
+      alert("Please enter a valid store URL."); // Validate input
+      return;
+    }
+    alert(`Store "${selectedStore}" connected with URL: ${storeUrl}`);
+    setIsModalOpen(false); // Close the modal after submission
+    setStoreUrl(""); // Clear the URL input
+  };
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
@@ -53,7 +78,10 @@ function LandingPage() {
                   className="card bg-white shadow-lg p-6 rounded-lg"
                 >
                   <h4 className="text-xl font-semibold">{store}</h4>
-                  <button className="btn btn-primary mt-4 w-full bg-blue-600 hover:bg-blue-700">
+                  <button
+                    onClick={() => handleConnectClick(store)}
+                    className="btn btn-primary mt-4 w-full bg-blue-600 hover:bg-blue-700"
+                  >
                     Connect
                   </button>
                 </div>
@@ -77,6 +105,42 @@ function LandingPage() {
           </div>
         </div>
       </div>
+      {/* Popup Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h3 className="text-xl font-semibold mb-4">
+              Connect {selectedStore}
+            </h3>
+            <form onSubmit={handleFormSubmit}>
+              <label className="block mb-2 font-medium">Store URL:</label>
+              <input
+                type="url"
+                placeholder="Enter the store URL"
+                className="input input-bordered w-full mb-4 p-2 border border-gray-300 rounded"
+                value={storeUrl}
+                onChange={(e) => setStoreUrl(e.target.value)} // Update state on input
+                required
+              />
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  className="btn btn-secondary bg-gray-300 text-gray-700 hover:bg-gray-400 px-4 py-2 rounded"
+                  onClick={() => setIsModalOpen(false)} // Close the modal
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

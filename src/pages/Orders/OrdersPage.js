@@ -14,6 +14,7 @@ function OrdersPage() {
     customerName: "",
     platform: "Shopify",
     priority: "High",
+    quantity: "",
     products: [],
   });
 
@@ -65,6 +66,7 @@ function OrdersPage() {
       customerName: "",
       platform: "Shopify",
       priority: "High",
+      quantity: "",
       products: [],
     });
     toggleModal();
@@ -214,6 +216,9 @@ function OrdersPage() {
                   {order.customerName} | {order.platform} |{" "}
                   <span className="text-red-500">High Priority</span>
                 </p>
+                <p className="text-gray-600">
+                  Order Quantity: {order.quantity}
+                </p>
                 <ul>
                   {order.products.map((product) => (
                     <li key={product.id}>{product.description}</li>
@@ -243,6 +248,14 @@ function OrdersPage() {
               value={orderData.customerName}
               onChange={handleInputChange}
               placeholder="Customer Name"
+              className="input input-bordered w-full mb-2"
+            />
+            <input
+              type="text"
+              name="quantity"
+              value={orderData.quantity}
+              onChange={handleInputChange}
+              placeholder="Product Quantity"
               className="input input-bordered w-full mb-2"
             />
             <select

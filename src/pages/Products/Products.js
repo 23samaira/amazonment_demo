@@ -30,9 +30,9 @@ function Products() {
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
       <nav className="bg-blue-600 text-white shadow-lg">
-        <div className="container mx-auto flex justify-between items-center p-4">
-          <h1 className="text-2xl font-bold">Amazonment</h1>
-          <ul className="flex space-x-4">
+        <div className="container mx-auto flex justify-center items-center p-4">
+          <h1 className="text-2xl font-bold absolute left-4">Amazonment</h1>
+          <ul className="flex space-x-4 items-center">
             <li className="hover:underline cursor-pointer">
               <Link to="/">Home</Link>
             </li>
@@ -42,15 +42,15 @@ function Products() {
             <li className="hover:underline cursor-pointer">
               <Link to="/OrdersPage">Orders</Link>
             </li>
-            <li className="hover:underline cursor-pointer">Returns</li>
-            <li className="hover:underline cursor-pointer">Tools</li>
+            {/*<li className="hover:underline cursor-pointer">Returns</li>
+            <li className="hover:underline cursor-pointer">Tools</li>*/}
           </ul>
-          <div className="flex items-center space-x-2">
+          {/*<div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-800">
               <i className="fas fa-user"></i>
             </div>
-          </div>
+          </div>*/}
         </div>
       </nav>
 
@@ -64,10 +64,11 @@ function Products() {
               seconds ago
             </p>
           </div>
+          {/*
           <div className="flex space-x-2">
             <button className="btn btn-outline">Sync</button>
             <button className="btn btn-outline">Create</button>
-          </div>
+          </div>*/}
         </div>
       </header>
       {/*body*/}
@@ -81,15 +82,16 @@ function Products() {
         {/* Search and Filters */}
         {!loading && !error && (
           <>
-            <div className="flex justify-between items-center space-x-4 mb-4">
+            {/*<div className="flex justify-between items-center space-x-4 mb-4">
+              
               {/* Search input */}
-              <input
+            {/*<input
                 type="text"
                 placeholder="Search Orders"
                 className="input input-bordered w-1/3"
               />
               {/* Filter dropdowns */}
-              <select className="select select-bordered w-1/4">
+            {/*<select className="select select-bordered w-1/4">
                 <option>Order List: Recently Added</option>
                 <option>Order List: Alphabetical</option>
               </select>
@@ -120,9 +122,10 @@ function Products() {
                     <th className="border border-gray-300 px-4 py-2 w-1/6">
                       Quantity
                     </th>
+                    {/*
                     <th className="border border-gray-300 px-4 py-2 w-1/6">
                       Action
-                    </th>
+                    </th>*/}
                   </tr>
                 </thead>
                 <tbody>
@@ -145,8 +148,9 @@ function Products() {
                       <td className="border border-gray-300 px-4 py-2 text-center">
                         {item.productQuantity}
                       </td>
+                      {/*
                       <td className="border border-gray-300 px-4 py-2 text-center">
-                        <div className="flex justify-center space-x-2">
+                         <div className="flex justify-center space-x-2">
                           <button className="btn btn-sm btn-outline">
                             Edit
                           </button>
@@ -154,7 +158,7 @@ function Products() {
                             Delete
                           </button>
                         </div>
-                      </td>
+                      </td>*/}
                     </tr>
                   ))}
                 </tbody>

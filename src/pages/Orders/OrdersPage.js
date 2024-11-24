@@ -108,9 +108,9 @@ function OrdersPage() {
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
       <nav className="bg-blue-600 text-white shadow-lg">
-        <div className="container mx-auto flex justify-between items-center p-4">
-          <h1 className="text-2xl font-bold">Amazonment</h1>
-          <ul className="flex space-x-4">
+        <div className="container mx-auto flex justify-center items-center p-4">
+          <h1 className="text-2xl font-bold absolute left-4">Amazonment</h1>
+          <ul className="flex space-x-4 items-center">
             <li className="hover:underline cursor-pointer">
               <Link to="/">Home</Link>
             </li>
@@ -120,15 +120,15 @@ function OrdersPage() {
             <li className="hover:underline cursor-pointer">
               <Link to="/OrdersPage">Orders</Link>
             </li>
-            <li className="hover:underline cursor-pointer">Returns</li>
-            <li className="hover:underline cursor-pointer">Tools</li>
+            {/*<li className="hover:underline cursor-pointer">Returns</li>
+            <li className="hover:underline cursor-pointer">Tools</li>*/}
           </ul>
-          <div className="flex items-center space-x-2">
+          {/*<div className="flex items-center space-x-2">
             <span className="hidden sm:block">Profile</span>
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-800">
               <i className="fas fa-user"></i>
             </div>
-          </div>
+          </div>*/}
         </div>
       </nav>
       {/* Header */}
@@ -142,7 +142,7 @@ function OrdersPage() {
             </p>
           </div>
           <div className="flex space-x-2">
-            <button className="btn btn-outline">Sync</button>
+            {/*<button className="btn btn-outline">Sync</button>*/}
             <button onClick={toggleModal} className="btn btn-outline">
               Create
             </button>
@@ -152,7 +152,7 @@ function OrdersPage() {
 
       {/* Body */}
       <div className="p-4 space-y-4">
-        {/* Search and Filters */}
+        {/* Search and Filters 
         <div className="flex items-center space-x-4">
           <input
             type="text"

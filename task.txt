@@ -1,0 +1,8 @@
+1. get the product list from database
+2. display product list on the products page
+2. get order information from database
+3. display order information on the orders page.
+
+Orders React file:
+1. On selection of checkbox the confirm shipment should be enabled
+2. Out of all the checkbox it should be  a single select, more than one should not be possible at this time. 

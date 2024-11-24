@@ -90,6 +90,18 @@ function OrdersPage() {
     setToastMessage("Sent for shipment"); // Set toast message
     setTimeout(() => setToastMessage(""), 3000); // Clear the message after 3 seconds
   };
+  // State to store the selected order
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  // Handle checkbox click
+  const handleCheckboxChange = (orderId) => {
+    // If the same checkbox is clicked again, deselect it
+    if (selectedOrderId === orderId) {
+      setSelectedOrderId(null);
+    } else {
+      // Otherwise, select the clicked checkbox
+      setSelectedOrderId(orderId);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
@@ -170,7 +182,16 @@ function OrdersPage() {
         {/* Action Buttons */}
         <div className="flex justify-end space-x-2">
           <button className="btn btn-text">Cancel</button>
-          <button onClick={toggleShipmentModal} className="btn btn-primary">
+          <button
+            onClick={toggleShipmentModal}
+            className={`btn btn-primary ${
+              selectedOrderId ? "" : "btn-disabled text-white"
+            }`}
+            disabled={!selectedOrderId}
+            style={{
+              color: !selectedOrderId ? "white" : undefined, // Apply white text color only when disabled
+            }}
+          >
             Confirm Shipment
           </button>
         </div>
@@ -182,7 +203,11 @@ function OrdersPage() {
               key={index}
               className="card bg-white shadow p-4 flex justify-between items-start"
             >
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={selectedOrderId === order.orderId}
+                onChange={() => handleCheckboxChange(order.orderId)}
+              />
               <div>
                 <h3 className="font-semibold">Order ID: #{order.orderId}</h3>
                 <p className="text-gray-600">
@@ -303,7 +328,7 @@ function OrdersPage() {
               className="select select-bordered w-full mb-2"
             >
               <option value="">Select Shipping Speed</option>
-              <option value="Standard">StandardL</option>
+              <option value="Standard">Standard</option>
               <option value="Expedited">Expedited</option>
             </select>
             <div className="mt-4 flex justify-end space-x-2">

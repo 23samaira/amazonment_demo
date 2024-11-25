@@ -9,12 +9,14 @@ function OrdersPage() {
   }); // Shipment data
   // States to manage modal visibility and order data
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("new"); // Track the active tab
   const [orderData, setOrderData] = useState({
     orderId: "",
     customerName: "",
     platform: "Shopify",
     priority: "High",
     products: [],
+    status: "pending",
   });
   const handleQuantityChange = (productId, increment) => {
     setOrderData((prevData) => ({
@@ -68,13 +70,17 @@ function OrdersPage() {
 
   // Submit the order and add to orders list
   const handleSubmitOrder = () => {
-    setOrders((prevOrders) => [...prevOrders, orderData]);
+    setOrders((prevOrders) => [
+      ...prevOrders,
+      { ...orderData, status: "pending" },
+    ]);
     setOrderData({
       orderId: "",
       customerName: "",
       platform: "Shopify",
       priority: "High",
       products: [],
+      status: "pending",
     });
     toggleModal();
   };
@@ -94,6 +100,13 @@ function OrdersPage() {
 
   // Submit shipment data
   const handleSubmitShipment = () => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.orderId === selectedOrderId
+          ? { ...order, status: "sent for shipment" }
+          : order
+      )
+    );
     // Close the modal and show a toast message
     toggleShipmentModal();
     setToastMessage("Sent for shipment"); // Set toast message
@@ -111,6 +124,11 @@ function OrdersPage() {
       setSelectedOrderId(orderId);
     }
   };
+  // Filter orders based on the active tab
+  const filteredOrders =
+    activeTab === "new"
+      ? orders.filter((order) => order.status === "pending")
+      : orders.filter((order) => order.status === "sent for shipment");
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Top Navigation Bar */}
@@ -144,8 +162,7 @@ function OrdersPage() {
           <div>
             <h1 className="text-2xl font-bold">Orders</h1>
             <p className="text-gray-600">
-              <span className="font-semibold">3 Orders</span> | Updated a few
-              seconds ago
+              <span className="font-semibold"> {orders.length} Orders</span>
             </p>
           </div>
           <div className="flex space-x-2">
@@ -181,42 +198,64 @@ function OrdersPage() {
         </div>
 
         {/* Tab Menu */}
-        <div className="flex space-x-4 border-b pb-2">
-          <button className="tab tab-active border-b-2 border-blue-600">
-            New
-          </button>
-          <button className="tab">History</button>
+        <div className="p-4 space-y-4">
+          <div className="flex space-x-4 border-b pb-2">
+            <button
+              onClick={() => setActiveTab("new")}
+              className={`tab ${
+                activeTab === "new"
+                  ? "tab-active border-b-2 border-blue-500"
+                  : ""
+              }`}
+            >
+              New
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={`tab ${
+                activeTab === "history"
+                  ? "tab-active border-b-2 border-blue-500"
+                  : ""
+              }`}
+            >
+              History
+            </button>
+          </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-end space-x-2">
-          <button className="btn btn-text">Cancel</button>
-          <button
-            onClick={toggleShipmentModal}
-            className={`btn btn-primary ${
-              selectedOrderId ? "" : "btn-disabled text-white"
-            }`}
-            disabled={!selectedOrderId}
-            style={{
-              color: !selectedOrderId ? "white" : undefined, // Apply white text color only when disabled
-            }}
-          >
-            Confirm Shipment
-          </button>
-        </div>
+        {activeTab === "new" && (
+          <div className="flex justify-end space-x-2">
+            <button className="btn btn-text">Cancel</button>
+            <button
+              onClick={toggleShipmentModal}
+              className={`btn btn-primary ${
+                selectedOrderId ? "" : "btn-disabled text-white"
+              }`}
+              disabled={!selectedOrderId}
+              style={{
+                color: !selectedOrderId ? "white" : undefined, // Apply white text color only when disabled
+              }}
+            >
+              Confirm Shipment
+            </button>
+          </div>
+        )}
 
         {/* Order Cards */}
         <div className="space-y-4">
-          {orders.map((order, index) => (
+          {filteredOrders.map((order, index) => (
             <div
               key={index}
               className="card bg-white shadow p-4 flex justify-between items-start"
             >
-              <input
-                type="checkbox"
-                checked={selectedOrderId === order.orderId}
-                onChange={() => handleCheckboxChange(order.orderId)}
-              />
+              {activeTab === "new" && (
+                <input
+                  type="checkbox"
+                  checked={selectedOrderId === order.orderId}
+                  onChange={() => handleCheckboxChange(order.orderId)}
+                />
+              )}
               <div>
                 <h3 className="font-semibold">Order ID: #{order.orderId}</h3>
                 <p className="text-gray-600">

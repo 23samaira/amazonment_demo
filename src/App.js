@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import OrdersPage from "./pages/Orders/OrdersPage.js";
 import Products from "./pages/Products/Products.js";
 import ProductDetails from "./pages/Products/ProductDetails.js";
+import MyStore from "./pages/MyStore/MyStore.js";
 import React, { useState } from "react";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="/OrdersPage" element={<OrdersPage />} />
           <Route path="/Products" element={<Products />} />
           <Route path="/Products/:id" element={<ProductDetails />} />
+          <Route path="/MyStore" element={<MyStore />} />
         </Routes>
       </Router>
     );

@@ -15,3 +15,59 @@ How to achieve this:
 - After adding the product, the quantity stepper is displayed by which user can maintatin the quantity
 How to achieve this:
 1. copying the stepper code from my store and utilising it in orders page.js
+const [quantities, setQuantities] = useState(
+    products.reduce((acc, product) => {
+      acc[product.id] = 1; // Default quantity is 1 for each product
+      return acc;
+    }, {})
+  );
+
+  // Function to handle quantity increment
+  const handleIncrement = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: prev[id] + 1,
+    }));
+  };
+
+  // Function to handle quantity decrement
+  const handleDecrement = (id) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: prev[id] > 0 ? prev[id] - 1 : 0, // Minimum quantity is 1
+    }));
+  };
+
+  {/* Stepper */}
+                <div className="flex items-center">
+                  <button
+                    className="btn btn-sm btn-outline"
+                    onClick={() => handleDecrement(product.id)}
+                  >
+                    -
+                  </button>
+                  <span mt-2 className="mx-2">
+                    {quantities[product.id]}
+                  </span>
+                  <button
+                    className="btn btn-sm btn-outline"
+                    onClick={() => handleIncrement(product.id)}
+                  >
+                    +
+                  </button>
+                </div>
+
+Now the task is: 
+1. when I create an order and when the order card is created it should come in the new section of the page, but when I send it for confirm shipment then it should go in the history tab of the page. 
+How to achieve this?
+- storing its status
+- if its new then showcase in the new section- 
+- on clicking confirm shipment, putting the status as shipped and writing that in history section.
+
+task:
+1. In the history section, checkbox, confirm shipment and cancel button are not required.
+How to do this?
+- When active tab is history then don't show checkbox and confirm shipment and cancel
+What are the steps:
+- 
+2. There should be a border below the active tab

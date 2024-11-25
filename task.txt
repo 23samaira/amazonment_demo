@@ -10,3 +10,8 @@ Orders React file:
 Now what't the problem happening is on refreshing the page the orders which are created are going as when I am clicking on the product and the expected behavior is once the orders are created with refresh they should not go.
 How to achieve this:
 1. 
+
+1. Need to add quantity with each added product and need to display the quantity with each product, providing user the stepper with which they can increase or decrease the quantity
+- After adding the product, the quantity stepper is displayed by which user can maintatin the quantity
+How to achieve this:
+1. copying the stepper code from my store and utilising it in orders page.js

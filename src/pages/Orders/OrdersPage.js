@@ -14,10 +14,18 @@ function OrdersPage() {
     customerName: "",
     platform: "Shopify",
     priority: "High",
-    quantity: "",
     products: [],
   });
-
+  const handleQuantityChange = (productId, increment) => {
+    setOrderData((prevData) => ({
+      ...prevData,
+      products: prevData.products.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: Math.max(1, product.quantity + increment) }
+          : product
+      ),
+    }));
+  };
   // State for adding a new product to the order
   const [newProduct, setNewProduct] = useState("");
 
@@ -43,7 +51,7 @@ function OrdersPage() {
         ...prevData,
         products: [
           ...prevData.products,
-          { description: newProduct, id: Date.now() },
+          { description: newProduct, id: Date.now(), quantity: 1 },
         ],
       }));
       setNewProduct("");
@@ -66,7 +74,6 @@ function OrdersPage() {
       customerName: "",
       platform: "Shopify",
       priority: "High",
-      quantity: "",
       products: [],
     });
     toggleModal();
@@ -216,12 +223,11 @@ function OrdersPage() {
                   {order.customerName} | {order.platform} |{" "}
                   <span className="text-red-500">High Priority</span>
                 </p>
-                <p className="text-gray-600">
-                  Order Quantity: {order.quantity}
-                </p>
                 <ul>
                   {order.products.map((product) => (
-                    <li key={product.id}>{product.description}</li>
+                    <li key={product.id}>
+                      {product.description} - Quantity: {product.quantity}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -250,14 +256,14 @@ function OrdersPage() {
               placeholder="Customer Name"
               className="input input-bordered w-full mb-2"
             />
-            <input
+            {/*<input
               type="text"
               name="quantity"
               value={orderData.quantity}
               onChange={handleInputChange}
               placeholder="Product Quantity"
               className="input input-bordered w-full mb-2"
-            />
+            /> */}
             <select
               name="platform"
               value={orderData.platform}
@@ -295,16 +301,37 @@ function OrdersPage() {
             {/* Product List */}
             <div className="mt-4">
               <h4 className="font-semibold mb-2">Added Products</h4>
-              {orderData.products.map((product, i) => (
-                <div key={product.id} className="flex items-center space-x-2">
+              {orderData.products.map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center justify-between space-x-4 mb-2"
+                >
                   <p>{product.description}</p>
+                  <div className="flex items-center space-x-2">
+                    {/* Quantity Stepper */}
+                    <button
+                      onClick={() => handleQuantityChange(product.id, -1)}
+                      className="btn btn-outline"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-bold">
+                      {product.quantity}
+                    </span>
+                    <button
+                      onClick={() => handleQuantityChange(product.id, 1)}
+                      className="btn btn-outline"
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
                     onClick={() => handleRemoveProduct(product.id)}
                     className="btn btn-outline btn-danger"
                   >
                     Remove
                   </button>
-                  <button className="btn btn-outline">Preview</button>
+                  {/*<button className="btn btn-outline">Preview</button>*/}
                 </div>
               ))}
             </div>
